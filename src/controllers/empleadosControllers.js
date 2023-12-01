@@ -17,6 +17,13 @@ export const crearEmpleado = async (req, res) => {
     // Iniciar la transacción
     await pool.query("START TRANSACTION");
 
+    // Insertar en la tabla telefono
+    const [resultTelefono] =  await pool.query("INSERT INTO telefono SET numeroTelefono = ?", [newCustomer.Telefono]);
+    const TelefonoID = resultTelefono.insertId;
+    // Insertar en la tabla direccion
+    const [resultDireccion] =  await pool.query("INSERT INTO direccion SET  ciudad = ?, colonia = ?, calle = ?", [newCustomer.Ciudad, newCustomer.Colonia, newCustomer.Calle]);
+    const DireccionID = resultDireccion.insertId;
+
     // Insertar en la tabla persona
     const [resultPersona] =  await pool.query("INSERT INTO persona SET personaID = ?, primerNombre = ?, segundoNombre = ?, primerApellido = ?, segundoApellido = ?, edad = ?, fechaNacimiento = ?, generoID = ? ,telefonoID = ?, direccionID = ?", [newCustomer.Identidad,newCustomer.PNombre,newCustomer.SNombre,newCustomer.PApellido,newCustomer.SApellido,newCustomer.Edad,newCustomer.Nacimiento,newCustomer.genero,TelefonoID,DireccionID]);
     const [personaIdResult] = await pool.query("SELECT personaID FROM persona WHERE personaID = ?", [newCustomer.Identidad]);

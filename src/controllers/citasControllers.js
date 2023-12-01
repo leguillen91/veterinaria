@@ -1,6 +1,6 @@
 import { pool } from "../db.js";
 
-export const crearMascotas = async (req, res) => {
+export const crearCitas = async (req, res) => {
   const nuevaMascota = req.body;
 
   try {
@@ -13,7 +13,7 @@ export const crearMascotas = async (req, res) => {
     const mascotaID = resultMascota.insertId;
 
 
-    await pool.query("INSERT INTO clientes_mascotas SET mascotaID = ?, clienteID = ? ", [mascotaID, nuevaMascota.IDdelCliente]);
+    await pool.query("INSERT INTO clientes_mascota SET mascotaID = ?, clienteID = ? ", [mascotaID, nuevaMascota.IDdelCliente]);
 
     // Confirmar la transacción
     await pool.query("COMMIT");
@@ -30,12 +30,12 @@ export const crearMascotas = async (req, res) => {
 };
 
 
-export const mostrarClientes = async (req, res) => {
+export const mostrarClientesyMascotas = async (req, res) => {
   const { identidad } = req.query;
-  const [result] = await pool.query("SELECT p.personaID, p.PrimerNombre, p.SegundoNombre, p.PrimerApellido, p.SegundoApellido, c.ClienteID FROM persona p join cliente c on p.PersonaID = c.PersonaID WHERE p.personaID = ?", [
+  const [result] = await pool.query("SELECT c.clienteID, p.primerNombre, p.primerApellido, p.segundoApellido, m.mascotaID,m.nombreMascota FROM cliente c JOIN  persona p ON c.personaID = p.personaID JOIN  mascota m ON c.clienteID = m.clienteID WHERE m.clienteID =  ?", [
     identidad,
   ]);
-  res.render("mascotas", {persona: result[0]});
+  res.render("cita", { personas: result });
 };
 
 export const actualizarClientes = async (req, res) => {
