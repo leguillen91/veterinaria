@@ -1,0 +1,53 @@
+<%- include("partials/_header") %>
+
+<style>
+  /* Estilos CSS personalizados */
+  .btn-primary {
+    background-color: #3498db; /* Color de fondo para el botón primario */
+    color: #fff; /* Color del texto para el botón primario */
+    border: none; /* Quita el borde del botón */
+  }
+
+  .btn-success {
+    background-color: #2ecc71; /* Color de fondo para el botón de éxito */
+    color: #161313; /* Color del texto para el botón de éxito */
+    border: none; /* Quita el borde del botón */
+  }
+
+  .btn-primary:hover,
+  .btn-success:hover {
+    filter: brightness(90%); /* Cambia el brillo al pasar el mouse */
+  }
+</style>
+
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-7">
+      <h2 style="color: #faf7f7;">Bienvenido a la Página de Inicio</h2>
+      <p style="color: #ffffff;">No se que poner</p>
+      <p style="color: #f7f6f6;">Explora nuestras opciones:</p>
+      <ul>
+        <li class="mb-2"><a href="/mascotas" class="btn btn-primary">Agregar Mascota</a></li>
+        <li class="mb-2"><a href="/m" class="btn btn-primary">Agregar Cliente</a></li>
+        <!-- Agrega más enlaces -->
+      </ul>
+    </div>
+    <div class="col-md-5">
+    </ul>
+  </div>
+  <div class="col-md-5">
+    <h3>Recursos Útiles</h3>
+    <ul>
+      <li><a href="/blog" style="color: #ffffff;">Nuestro Blog</a></li>
+      <li><a href="/contacto" style="color: #ffffff;">Contáctanos</a></li>
+      <!-- Agrega más enlaces o información -->
+    </ul>
+    <div class="alert alert-info" role="alert">
+      <p>¡No dudes en explorar y descubrir más sobre lo que ofrecemos!</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<%- include("partials/_footer") %>
