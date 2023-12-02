@@ -1,91 +1,97 @@
-<!-- index.ejs -->
 <%- include("partials/_header") %>
 
 <div class="container mt-5">
-    <div class="row">
-      <div class="col-md-12">
-        <h2>Buscar Mascota y Cliente</h2>
-  
-        <!-- Formulario para buscar cliente por número de identidad -->
-        <form action="/cita" method="GET">
-          <label for="identidadInput">Número de Cliente:</label>
-          <input
-            type="text"
-            name="identidad"
-            id="identidadInput"
-            class="form-control mb-2"
-            required
-          />
-          <button type="submit" class="btn btn-primary">Buscar Cliente</button>
-        </form>
-  
-        <!-- Mostrar información del cliente si está disponible -->
-        <% if (personas && personas.length > 0) { %>
-          <h3>Información del Cliente y Mascotas</h3>
-          <table class="table table-dark table-bordered table-hover">
-            <thead>
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Buscar Mascota y Cliente</h2>
+
+      <!-- Formulario para buscar cliente por número de identidad -->
+      <form action="/cita" method="GET" class="mb-3">
+        <label for="identidadInput">Número de Cliente:</label>
+        <input
+          type="text"
+          name="identidad"
+          id="identidadInput"
+          class="form-control mb-2"
+          required
+        />
+        <button type="submit" class="btn btn-primary">Buscar Cliente</button>
+      </form>
+
+      <!-- Mostrar información del cliente si está disponible -->
+      <% if (personas && personas.length > 0) { %>
+        <h3>Información del Cliente y Mascotas</h3>
+        <table class="table table-dark table-bordered table-hover">
+          <thead>
+            <tr>
+              <td>Cliente ID</td>
+              <td>Primer Nombre</td>
+              <td>Primer Apellido</td>
+              <td>Segundo Apellido</td>
+              <td>Mascota ID</td>
+              <td>Nombre Mascota</td>
+            </tr>
+          </thead>
+          <tbody>
+            <% personas.forEach(persona => { %>
               <tr>
-                <td>Cliente ID</td>
-                <td>Primer Nombre</td>
-                <td>Primer Apellido</td>
-                <td>Segundo Apellido</td>
-                <td>Mascota ID</td>
-                <td>Nombre Mascota</td>
+                <td><%= persona.clienteID %></td>
+                <td><%= persona.primerNombre %></td>
+                <td><%= persona.primerApellido %></td>
+                <td><%= persona.segundoApellido %></td>
+                <td><%= persona.mascotaID %></td>
+                <td><%= persona.nombreMascota %></td>
               </tr>
-            </thead>
-            <tbody>
-              <% personas.forEach(persona => { %>
-                <tr>
-                  <td><%= persona.clienteID %></td>
-                  <td><%= persona.primerNombre %></td>
-                  <td><%= persona.primerApellido %></td>
-                  <td><%= persona.segundoApellido %></td>
-                  <td><%= persona.mascotaID %></td>
-                  <td><%= persona.nombreMascota %></td>
-                </tr>
-              <% }); %>
-            </tbody>
-          </table>
-        <% } else { %>
-          <p>No se encontró la información del cliente.</p>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p>No se encontró la información del cliente.</p>
       <% } %>
- <a href="/add" class="btn btn-success">Agregar Cliente</a>
-<h1>NUEVA CITA</h1>
+      <a href="/add" class="btn btn-success mt-3">Agregar Cliente</a>
     </div>
-    <form action="/add_mascotas" method="POST">
-    
+  </div>
+
+  <h1 class="mt-5">NUEVA CITA</h1>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <a href="/citasPorMes" class="btn btn-primary">Ver Citas Programadas</a>
+    </div>
+
+    <div class="col-md-6">
+      <form action="/add_citas" method="POST">
         <input
           type="number"
           name="mascotaid"
           placeholder="Numero de Mascota"
           class="form-control mb-2"
         />
-        
+
         <input
           type="date"
           name="fecha"
           placeholder="Edad"
           class="form-control mb-2"
         />
+
         <input
           type="time"
           name="hora"
           placeholder="Hora de la cita"
           class="form-control mb-2"
         />
-        <label for="genero" >Seleccione El tipo de Servicio:</label>
+
+        <label for="genero" class="mb-2">Seleccione El tipo de Servicio:</label>
         <select id="servicio" name="servicio" class="form-select mb-3">
-          <option value="1" class="form-control mb-2" >Consulta General</option>
-          <option value="2" class="form-control mb-2" >Estetico</option>
-          <option value="3" class="form-control mb-2" >Cirugia</option>
+          <option value="1" class="form-control mb-2">Consulta General</option>
+          <option value="2" class="form-control mb-2">Estetico</option>
+          <option value="3" class="form-control mb-2">Cirugia</option>
         </select>
 
-             
-    
-    
-      <button type="submit" class="btn btn-info">Registrar Mascota</button>
-      
+        <button type="submit" class="btn btn-info">Registrar Mascota</button>
       </form>
+    </div>
   </div>
 </div>
 

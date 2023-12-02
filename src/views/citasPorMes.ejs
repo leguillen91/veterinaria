@@ -1,0 +1,51 @@
+<!-- En tu archivo citasPorMes.ejs -->
+<%- include("partials/_header") %>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Buscar Citas por Mes</h2>
+
+      <!-- Formulario para buscar citas por mes -->
+      <form action="/citasPorMes" method="GET">
+        <label for="mesInput">Selecciona un mes:</label>
+        <input
+          type="number"
+          name="mes"
+          id="mesInput"
+          class="form-control mb-2"
+          required
+        />
+        <button type="submit" class="btn btn-primary">Buscar Citas</button>
+      </form>
+
+      <% if (citas && citas.length > 0) { %>
+        <h3>Citas para el Mes <%= mes %></h3>
+        <table class="table table-dark table-bordered table-hover">
+          <thead>
+            <tr>
+              <td>Fecha</td>
+              <td>Hora</td>
+              <!-- Agrega más columnas según sea necesario -->
+            </tr>
+          </thead>
+          <tbody>
+            <% citas.forEach(cita => { %>
+              <tr>
+                <td><%= cita.fecha %></td>
+                <td><%= cita.hora %></td>
+                <!-- Agrega más columnas según sea necesario -->
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p>No existen citas para el mes <%= mes %>.</p>
+      <% } %>
+
+    </div>
+    <a href="/cita" class="btn btn-primary">Regresar a Nueva Cita</a>
+  </div>
+</div>
+
+<%- include("partials/_footer") %>

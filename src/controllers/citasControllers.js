@@ -1,19 +1,13 @@
 import { pool } from "../db.js";
 
 export const crearCitas = async (req, res) => {
-  const nuevaMascota = req.body;
+  const nuevaCita = req.body;
 
   try {
     // Iniciar la transacción
     await pool.query("START TRANSACTION");
 
-    // Insertar en la tabla telefono
-    const [resultMascota] =   await pool.query("INSERT INTO mascota set nombreMascota = ? , edad = ?, especieID = ?, sexoID = ? , clienteID=? ",
-    [nuevaMascota.Nombre,nuevaMascota.Edad,nuevaMascota.especie,nuevaMascota.genero,nuevaMascota.IDdelCliente]);
-    const mascotaID = resultMascota.insertId;
-
-
-    await pool.query("INSERT INTO clientes_mascota SET mascotaID = ?, clienteID = ? ", [mascotaID, nuevaMascota.IDdelCliente]);
+    await pool.query("INSERT INTO cita SET fecha = ?, hora = ?, tipoServicioID = ?, mascotaID=?", [nuevaCita.fecha,nuevaCita.hora,nuevaCita.servicio,nuevaCita.mascotaid]);
 
     // Confirmar la transacción
     await pool.query("COMMIT");
@@ -38,18 +32,69 @@ export const mostrarClientesyMascotas = async (req, res) => {
   res.render("cita", { personas: result });
 };
 
-export const actualizarClientes = async (req, res) => {
+export const actualizarCitas = async (req, res) => {
   const { id } = req.params;
-  const newCustomer = req.body;
-  await pool.query("UPDATE mascotas set ? WHERE id = ?", [newCustomer, id]);
-  res.redirect("/");
+  const { nuevaFecha, nuevaHora } = req.body;
+
+  try {
+    // Actualizar la fecha y hora de la cita en la base de datos
+    await pool.query("UPDATE cita SET fecha = ?, hora = ? WHERE id = ?", [nuevaFecha, nuevaHora, id]);
+
+    res.redirect("/ReporteriaCita"); // Redirigir a la página de citas por mes
+  } catch (error) {
+    console.error('Error al actualizar la cita:', error.message);
+    res.status(500).send('Error interno del servidor');
+  }
 };
 
-export const borrarClientes = async (req, res) => {
+export const cancelarCitas = async (req, res) => {
   const { id } = req.params;
-  const result = await pool.query("DELETE FROM mascotas WHERE id = ?", [id]);
-  if (result.affectedRows === 1) {
-    res.json({ message: "Customer deleted" });
+  console.log('ID de la cita a cancelar:', id);
+  try {
+    // Eliminar la cita de la base de datos
+    await pool.query("DELETE FROM cita WHERE id = ?", [id]);
+
+    res.redirect("/ReporteriaCita"); // Redirigir a la página de citas por mes
+  } catch (error) {
+    console.error('Error al cancelar la cita:', error.message);
+    res.status(500).send('Error interno del servidor');
   }
-  res.redirect("/");
+};
+
+
+export const mostrarCitasPorMes = async (req, res) => {
+  // Obtener el mes desde la consulta
+  const { mes } = req.query;
+
+  try {
+    let citas = [];
+
+    if (mes) {
+      // Consultar las citas en el mes especificado
+      [citas] = await pool.query(
+        'SELECT * FROM cita WHERE MONTH(fecha) = ?',
+        [mes]
+      );
+    }
+
+    // Renderizar la vista con las citas obtenidas
+    res.render('citasPorMes', { citas, mes });
+  } catch (error) {
+    console.error('Error al obtener las citas:', error.message);
+    res.status(500).send('Error interno del servidor');
+  }
+};
+export const generarReporteCitas = async (req, res) => {
+  const { mes } = req.query;
+
+  try {
+    // Consultar las citas para el mes específico desde la base de datos
+    const [citas] = await pool.query('SELECT * FROM cita WHERE MONTH(fecha) = ?', [mes]);
+
+    // Renderizar la vista del reporte con los resultados
+    res.render('reporteriaCita', { citas, mes });
+  } catch (error) {
+    console.error('Error al generar el reporte de citas:', error.message);
+    res.status(500).send('Error interno del servidor');
+  }
 };

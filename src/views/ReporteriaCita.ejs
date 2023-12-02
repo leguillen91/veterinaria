@@ -1,0 +1,63 @@
+<%- include("partials/_header") %>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Reporte de Citas</h2>
+
+      <!-- Formulario para buscar citas por mes -->
+      <form action="/reporteriaCita" method="GET">
+        <label for="mesInput">Selecciona un mes:</label>
+        <input
+          type="number"
+          name="mes"
+          id="mesInput"
+          class="form-control mb-2"
+          required
+        />
+        <button type="submit" class="btn btn-primary">Generar Reporte</button>
+      </form>
+
+      <% if (citas && citas.length > 0) { %>
+        <h3>Citas para el Mes <%= mes %></h3>
+        <table class="table table-dark table-bordered table-hover">
+          <thead>
+            <tr>
+              <td>ID</td>
+              <td>Fecha</td>
+              <td>Hora</td>
+              <td>Acciones</td>
+            </tr>
+          </thead>
+          <tbody>
+            <% citas.forEach(cita => { %>
+              <tr>
+                <td><%= cita.id %></td>
+                <td><%= cita.fecha %></td>
+                <td><%= cita.hora %></td>
+                <td>
+                  <!-- Agrega un formulario para actualizar la fecha y hora de la cita -->
+                  <form action="/actualizarCita/<%= cita.id %>" method="POST">
+                    <input type="date" name="nuevaFecha" required>
+                    <input type="time" name="nuevaHora" required>
+                    <button type="submit" class="btn btn-warning">Actualizar</button>
+                  </form>
+                  <!-- Agrega un formulario para cancelar la cita -->
+                  <form action="/cancelarCita/<%= cita.id %>" method="POST">
+                    <button type="submit" class="btn btn-danger">Cancelar</button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p>No existen citas para el mes <%= mes %>.</p>
+      <% } %>
+
+    </div>
+    <a href="/" class="btn btn-primary">Regresar</a>
+  </div>
+</div>
+
+<%- include("partials/_footer") %>

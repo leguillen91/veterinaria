@@ -26,3 +26,21 @@ button {
 button:hover {
   background-color: #d81818;
 }
+
+/* En tu archivo de estilos CSS o en la sección de estilos de tu HTML */
+
+/* Estilo para el botón "Buscar Citas" */
+.btn-primary {
+  /* Puedes ajustar estos valores según tus necesidades */
+  background-color: #007bff; /* Color azul */
+  border-color: #007bff;
+  color: #fff; /* Texto blanco */
+}
+
+/* Estilo para el botón "Ver Citas Programadas" */
+.btn-success {
+  /* Puedes ajustar estos valores según tus necesidades */
+  background-color: #28a745; /* Color verde */
+  border-color: #28a745;
+  color: #fff; /* Texto blanco */
+}
