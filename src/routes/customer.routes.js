@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import {
   mostrarPersonas,
   crearPersonas,
@@ -37,6 +38,10 @@ import {
       } from "../controllers/ProductoController.js";
 
     import { crearUsuario  } from "../controllers/usuarioController.js"; // Ajusta el nombre del controlador según tu estructura
+
+
+    import { passport } from "../controllers/loginController.js";
+
 const router = Router();
 
 router.get("/m", mostrarPersonas);
@@ -65,8 +70,18 @@ router.get("/formulario", (req, res) => {
 // Ruta para procesar la creación de usuario desde el formulario
 router.post("/formulario", crearUsuario);
 
+router.get('/login', (req, res) => {
+  res.render('login'); // Puedes renderizar un formulario de inicio de sesión aquí
+});
 
-
-
+// Ruta para procesar la autenticación
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/inicio',
+  failureRedirect: '/login',
+  failureFlash: true,
+}));
 
 export default router;
+
+
+
