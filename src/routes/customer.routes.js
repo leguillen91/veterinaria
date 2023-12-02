@@ -36,7 +36,7 @@ import {
       reporteProductos
       } from "../controllers/ProductoController.js";
 
-      
+    import { crearUsuario  } from "../controllers/usuarioController.js"; // Ajusta el nombre del controlador según tu estructura
 const router = Router();
 
 router.get("/m", mostrarPersonas);
@@ -57,6 +57,15 @@ router.post("/actualizarCita/:id", actualizarCitas);
 router.post("/actualizarProducto/:id", actualizarProducto);
 router.post("/cancelarCita/:id", cancelarCitas);
 router.post("/borrarProducto/:id", eliminarProducto);
+// Ruta para mostrar el formulario de creación de usuario
+router.get("/formulario", (req, res) => {
+  res.render("formulario"); // Ajusta el nombre de la vista según tu estructura
+});
+
+// Ruta para procesar la creación de usuario desde el formulario
+router.post("/formulario", crearUsuario);
+
+
 
 
 

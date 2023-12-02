@@ -1,0 +1,35 @@
+<%- include("partials/_header") %>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Crear Usuario con Rol</h2>
+
+      <!-- Formulario para crear usuario con rol -->
+      <form action="/formulario" method="post" class="mb-3">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" class="form-control mb-2" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" class="form-control mb-2" required>
+
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" class="form-control mb-2" required>
+
+        <label for="rol">Rol:</label>
+        <select id="rol" name="rol" class="form-select mb-3" required>
+          <option value="administrador" class="form-control mb-2">Administrador</option>
+          <option value="secretaria" class="form-control mb-2">Secretaria</option>
+          <option value="veterinario" class="form-control mb-2">Veterinaria</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Crear Usuario</button>
+      </form>
+
+      <!-- Aquí puedes agregar la lógica para mostrar mensajes de éxito/error si es necesario -->
+    </div>
+  </div>
+</div>
+
+<%- include("partials/_footer") %>
+
