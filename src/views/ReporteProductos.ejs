@@ -1,0 +1,101 @@
+<%- include("partials/_header") %>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Reporte de Productos</h2>
+
+      <!-- Formulario para buscar productos por nombre -->
+      <form action="/reporteProductos" method="GET">
+        <label for="nombreProductoInput">Buscar producto por nombre:</label>
+        <input
+          type="text"
+          name="nombreProducto"
+          id="nombreProductoInput"
+          class="form-control mb-2"
+          placeholder="Ingrese nombre del producto"
+          required
+        />
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      </form>
+
+      <!-- Lista de productos (ajustar según sea necesario) -->
+      <% if (productos && productos.length > 0) { %>
+        <table class="table table-dark table-bordered table-hover">
+          <thead>
+            <tr>
+              <td>ID</td>
+              <td>Nombre</td>
+              <td>Precio de Compra</td>
+              <td>Precio de Venta</td>
+              <td>Cantidad</td>
+              <td>Acciones</td>
+            </tr>
+          </thead>
+          <tbody>
+            <% productos.forEach(producto => { %>
+              <tr>
+                <td><%= producto.productoID %></td>
+                <td><%= producto.nombreProducto %></td>
+                <td><%= producto.precioCompra %></td>
+                <td><%= producto.precioProducto %></td>
+                <td><%= producto.cantidad %></td>
+                <td>
+                  <!-- Formulario para actualizar el producto -->
+                  <form action="/actualizarProducto/<%= producto.productoID %>" method="POST">
+                    <input type="text" name="nombreProducto" required placeholder="Nombre">
+                    <input type="text" name="precioCompra" required placeholder="Precio de Compra">
+                    <input type="text" name="precioProducto" required placeholder="Precio de Venta">
+                    <input type="number" name="cantidad" required placeholder="Cantidad">
+                    <button type="submit" class="btn btn-warning">Actualizar</button>
+                  </form>
+                  <!-- Formulario para eliminar el producto -->
+                  <form action="/eliminarProducto/<%= producto.productoID %>" method="POST">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p>No existen productos registrados.</p>
+      <% } %>
+      <h1>Registrar Producto</h1>
+      <form action="/add_producto" method="POST">
+    
+        <input
+          type="text"
+          name="nombre"
+          placeholder="Nombre de Producto"
+          class="form-control mb-2"
+        />
+        
+        <input
+          type="text"
+          name="compra"
+          placeholder="Precio Compra"
+          class="form-control mb-2"
+        />
+        <input
+          type="text"
+          name="venta"
+          placeholder="Precio Venta"
+          class="form-control mb-2"
+        />
+
+        <input
+        type="text"
+        name="cantidad"
+        placeholder="Cantidad"
+        class="form-control mb-2"
+      />
+       
+      <button type="submit" class="btn btn-info">Registrar Producto</button>
+      </form>
+    </div>
+    <a href="/" class="btn btn-primary mt-2">Regresar</a>
+  </div>
+</div>
+
+<%- include("partials/_footer") %>

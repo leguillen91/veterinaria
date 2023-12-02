@@ -32,18 +32,18 @@
           <tbody>
             <% citas.forEach(cita => { %>
               <tr>
-                <td><%= cita.id %></td>
+                <td><%= cita.citaID %></td>
                 <td><%= cita.fecha %></td>
                 <td><%= cita.hora %></td>
                 <td>
                   <!-- Agrega un formulario para actualizar la fecha y hora de la cita -->
-                  <form action="/actualizarCita/<%= cita.id %>" method="POST">
+                  <form action="/actualizarCita/<%= cita.citaID %>" method="POST">
                     <input type="date" name="nuevaFecha" required>
                     <input type="time" name="nuevaHora" required>
                     <button type="submit" class="btn btn-warning">Actualizar</button>
                   </form>
                   <!-- Agrega un formulario para cancelar la cita -->
-                  <form action="/cancelarCita/<%= cita.id %>" method="POST">
+                  <form action="/cancelarCita/<%= cita.citaID %>" method="POST">
                     <button type="submit" class="btn btn-danger">Cancelar</button>
                   </form>
                 </td>

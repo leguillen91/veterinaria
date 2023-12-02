@@ -38,7 +38,7 @@ export const actualizarCitas = async (req, res) => {
 
   try {
     // Actualizar la fecha y hora de la cita en la base de datos
-    await pool.query("UPDATE cita SET fecha = ?, hora = ? WHERE id = ?", [nuevaFecha, nuevaHora, id]);
+    await pool.query("UPDATE cita SET fecha = ?, hora = ? WHERE citaID = ?", [nuevaFecha, nuevaHora, id]);
 
     res.redirect("/ReporteriaCita"); // Redirigir a la página de citas por mes
   } catch (error) {
@@ -52,7 +52,7 @@ export const cancelarCitas = async (req, res) => {
   console.log('ID de la cita a cancelar:', id);
   try {
     // Eliminar la cita de la base de datos
-    await pool.query("DELETE FROM cita WHERE id = ?", [id]);
+    await pool.query("DELETE FROM cita WHERE citaID = ?", [id]);
 
     res.redirect("/ReporteriaCita"); // Redirigir a la página de citas por mes
   } catch (error) {
