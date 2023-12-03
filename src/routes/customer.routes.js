@@ -106,6 +106,10 @@ router.get('/login', (req, res) => {
 router.post("/login", logearse);
 
 
+router.get('/Inicio', (req, res) => {
+  res.render('Inicio'); // Renderiza el formulario de inicio de sesión
+});
+
 router.get('/venta', (req, res) => {
   const mostrarFormulario = req.query.mostrarFormulario === 'true';
   res.render('venta', { mostrarFormulario });
