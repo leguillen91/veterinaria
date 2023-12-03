@@ -40,7 +40,23 @@ import {
     import { crearUsuario  } from "../controllers/usuarioController.js"; // Ajusta el nombre del controlador según tu estructura
 
 
-    import { passport } from "../controllers/loginController.js";
+    import { 
+     
+      logearse
+    
+    } from "../controllers/loginController.js";
+
+    import { 
+     
+      crearVenta,
+      reporteProductosV,
+      crearVentaProducto
+    
+    } from "../controllers/ventaController.js";
+
+
+
+
 
 const router = Router();
 
@@ -62,6 +78,7 @@ router.post("/actualizarCita/:id", actualizarCitas);
 router.post("/actualizarProducto/:id", actualizarProducto);
 router.post("/cancelarCita/:id", cancelarCitas);
 router.post("/borrarProducto/:id", eliminarProducto);
+router.post("/add_ventaproducto", crearVentaProducto);
 // Ruta para mostrar el formulario de creación de usuario
 router.get("/formulario", (req, res) => {
   res.render("formulario"); // Ajusta el nombre de la vista según tu estructura
@@ -70,16 +87,23 @@ router.get("/formulario", (req, res) => {
 // Ruta para procesar la creación de usuario desde el formulario
 router.post("/formulario", crearUsuario);
 
+
 router.get('/login', (req, res) => {
-  res.render('login'); // Puedes renderizar un formulario de inicio de sesión aquí
+  res.render('login'); // Renderiza el formulario de inicio de sesión
 });
 
-// Ruta para procesar la autenticación
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/inicio',
+router.post("/login", logearse);
+
+/*router.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
   failureRedirect: '/login',
-  failureFlash: true,
-}));
+ // failureFlash: true,
+}));*/
+
+
+router.get("/venta", reporteProductosV);
+//router.get("/venta_add", crearVenta);
+router.post("/venta_add", crearVenta);
 
 export default router;
 

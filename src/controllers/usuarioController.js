@@ -42,18 +42,18 @@ export { crearUsuario };
 
 // usuarioController.js
 
-import { db } from "../db.js";
+import { pool } from "../db.js";
 
 const crearUsuario = async (req, res) => {
   const { nombre, email, password, rol } = req.body;
 
   try {
     // Iniciar la transacción
-    await db.query("START TRANSACTION");
+    await pool.query("START TRANSACTION");
 
     // Crear el usuario
     const createUserQuery = `CREATE USER '${email}'@'localhost' IDENTIFIED BY '${password}'`;
-    await db.query(createUserQuery);
+    await pool.query(createUserQuery);
 
     // Asignar privilegios según el tipo de rol
     let grantQuery = '';
@@ -72,17 +72,17 @@ const crearUsuario = async (req, res) => {
         throw new Error('Rol no reconocido');
     }
 
-    await db.query(grantQuery);
+    await pool.query(grantQuery);
 
     // Confirmar la transacción
-    await db.query("COMMIT");
+    await pool.query("COMMIT");
 
     res.status(201).send({ mensaje: 'Usuario creado exitosamente.' });
   } catch (error) {
     console.error("Error en la transacción:", error.message);
 
     // Deshacer la transacción en caso de error
-    await db.query("ROLLBACK");
+    await pool.query("ROLLBACK");
 
     res.status(500).send({ mensaje: 'Error al crear el usuario.' });
   }

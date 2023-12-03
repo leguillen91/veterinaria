@@ -1,24 +1,24 @@
 
-import { db } from "../db.js";
+import { pool } from "../db.js";
 
 export const crearCitas = async (req, res) => {
   const nuevaCita = req.body;
 
   try {
     // Iniciar la transacción
-    await db.query("START TRANSACTION");
+    await pool.query("START TRANSACTION");
 
-    await db.query("INSERT INTO cita SET fecha = ?, hora = ?, tipoServicioID = ?, mascotaID=?", [nuevaCita.fecha,nuevaCita.hora,nuevaCita.servicio,nuevaCita.mascotaid]);
+    await pool.query("INSERT INTO cita SET fecha = ?, hora = ?, tipoServicioID = ?, mascotaID=?", [nuevaCita.fecha,nuevaCita.hora,nuevaCita.servicio,nuevaCita.mascotaid]);
 
     // Confirmar la transacción
-    await db.query("COMMIT");
+    await pool.query("COMMIT");
 
     res.redirect("/");
   } catch (error) {
     console.error("Error en la transacción:", error.message);
 
     // Deshacer la transacción en caso de error
-    await db.query("ROLLBACK");
+    await pool.query("ROLLBACK");
 
     res.status(500).send("Error interno del servidor");
   }
@@ -27,7 +27,7 @@ export const crearCitas = async (req, res) => {
 
 export const mostrarClientesyMascotas = async (req, res) => {
   const { identidad } = req.query;
-  const [result] = await db.query("SELECT c.clienteID, p.primerNombre, p.primerApellido, p.segundoApellido, m.mascotaID,m.nombreMascota FROM cliente c JOIN  persona p ON c.personaID = p.personaID JOIN  mascota m ON c.clienteID = m.clienteID WHERE m.clienteID =  ?", [
+  const [result] = await pool.query("SELECT c.clienteID, p.primerNombre, p.primerApellido, p.segundoApellido, m.mascotaID,m.nombreMascota FROM cliente c JOIN  persona p ON c.personaID = p.personaID JOIN  mascota m ON c.clienteID = m.clienteID WHERE m.clienteID =  ?", [
     identidad,
   ]);
   res.render("cita", { personas: result });
@@ -39,7 +39,7 @@ export const actualizarCitas = async (req, res) => {
 
   try {
     // Actualizar la fecha y hora de la cita en la base de datos
-    await db.query("UPDATE cita SET fecha = ?, hora = ? WHERE citaID = ?", [nuevaFecha, nuevaHora, id]);
+    await pool.query("UPDATE cita SET fecha = ?, hora = ? WHERE citaID = ?", [nuevaFecha, nuevaHora, id]);
 
     res.redirect("/ReporteriaCita"); // Redirigir a la página de citas por mes
   } catch (error) {
@@ -53,7 +53,7 @@ export const cancelarCitas = async (req, res) => {
   console.log('ID de la cita a cancelar:', id);
   try {
     // Eliminar la cita de la base de datos
-    await db.query("DELETE FROM cita WHERE citaID = ?", [id]);
+    await pool.query("DELETE FROM cita WHERE citaID = ?", [id]);
 
     res.redirect("/ReporteriaCita"); // Redirigir a la página de citas por mes
   } catch (error) {
@@ -72,7 +72,7 @@ export const mostrarCitasPorMes = async (req, res) => {
 
     if (mes) {
       // Consultar las citas en el mes especificado
-      [citas] = await db.query(
+      [citas] = await pool.query(
         'SELECT * FROM cita WHERE MONTH(fecha) = ?',
         [mes]
       );
@@ -90,7 +90,7 @@ export const generarReporteCitas = async (req, res) => {
 
   try {
     // Consultar las citas para el mes específico desde la base de datos
-    const [citas] = await db.query('SELECT * FROM cita WHERE MONTH(fecha) = ?', [mes]);
+    const [citas] = await pool.query('SELECT * FROM cita WHERE MONTH(fecha) = ?', [mes]);
 
     // Renderizar la vista del reporte con los resultados
     res.render('reporteriaCita', { citas, mes });

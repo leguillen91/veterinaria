@@ -1,0 +1,122 @@
+<%- include("partials/_header") %>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>NUEVA VENTA</h2>
+      <h2>Información de la Venta</h2>
+            <table class="table table-dark table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <td>ID de Venta</td>
+                        <td>Fecha de Venta</td>
+                        <td>Cantidad Vendida</td>
+                        <td>ID de Empleado</td>
+                        <td>OBS</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><%= venta.ventaID %></td>
+                        <td><%= venta.fechaVenta %></td>
+                        <td><%= venta.cantidadVendida %></td>
+                        <td><%= venta.empleadoID %></td>
+                        <td><%= venta.OBS %></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2>NUEVA VENTA</h2>
+      
+            <!-- Formulario para crear una nueva venta y agregar productos -->
+            <form action="/venta_add" method="POST">
+              <!-- Campos para la información de la venta -->
+              <label for="fechaVentaInput">Fecha de Venta:</label>
+              <input type="date" name="fechaVenta" id="fechaVentaInput" class="form-control mb-2" required />
+      
+              <label for="cantidadVendidaInput">Cantidad Vendida:</label>
+              <input type="text" name="cantidadVendida" id="cantidadVendidaInput" class="form-control mb-2" required />
+      
+              <label for="empleadoIDInput">ID del Empleado:</label>
+              <input type="text" name="empleadoID" id="empleadoIDInput" class="form-control mb-2" required />
+      
+              <label for="OBSInput">Observaciones:</label>
+              <textarea name="OBS" id="OBSInput" class="form-control mb-2"></textarea>
+              <button type="submit" class="btn btn-info">Nueva Venta</button>
+            </form>
+
+      <!-- Formulario para buscar productos por nombre -->
+      <form action="/venta" method="GET">
+        <label for="nombreProductoInput">Buscar producto por nombre:</label>
+        <input
+          type="text"
+          name="nombreProducto"
+          id="nombreProductoInput"
+          class="form-control mb-2"
+          placeholder="Ingrese nombre del producto"
+          required
+        />
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      </form>
+
+      <!-- Lista de productos (ajustar según sea necesario) -->
+      <% if (productos && productos.length > 0) { %>
+        <table class="table table-dark table-bordered table-hover">
+          <thead>
+            <tr>
+              <td>ID</td>
+              <td>Nombre</td>
+              <td>Precio de Compra</td>
+              <td>Precio de Venta</td>
+              <td>Cantidad</td>
+              <td>Acciones</td>
+            </tr>
+          </thead>
+          <tbody>
+            <% productos.forEach(producto => { %>
+              <tr>
+                <td><%= producto.productoID %></td>
+                <td><%= producto.nombreProducto %></td>
+                <td><%= producto.precioCompra %></td>
+                <td><%= producto.precioProducto %></td>
+                <td><%= producto.cantidad %></td>
+                <td>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p>No existen productos registrados.</p>
+      <% } %>
+      
+              <!-- Campos para agregar productos a la venta -->
+              <form action="/add_ventaproducto" method="POST">
+              
+              <label for="productosInput">Agregar Productos:</label>
+              <div id="productosInput">
+                <div class="producto">
+                <label for="productoIDInput">ID de la Venta:</label>
+                <input type="text" name="ventaID" class="form-control mb-2" required />
+
+                <div class="producto">
+                  <label for="productoIDInput">ID del Producto:</label>
+                  <input type="text" name="productoID" class="form-control mb-2" required />
+      
+                  <label for="cantidadInput">Cantidad:</label>
+                  <input type="text" name="cantidad" class="form-control mb-2" required />
+      
+                  <label for="precioUnitarioInput">Precio Unitario:</label>
+                  <input type="text" name="precioUnitario" class="form-control mb-2" required />
+      
+                  <label for="subtotalProductoInput">Subtotal Producto:</label>
+                  <input type="text" name="subtotalProducto" class="form-control mb-2" required />
+                </div>
+              </div>
+      
+              <button type="submit" class="btn btn-info">Registrar Venta</button>
+            </form>
+          </div>
+          <a href="/" class="btn btn-primary mt-2">Regresar</a>
+        </div>
+      </div>
+      <%- include("partials/_footer") %>
