@@ -1,0 +1,118 @@
+<%- include("partials/_header") %>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Ingresar Información</h2>
+
+      <!-- Formulario para ingresar información -->
+      <form action="/ingresarInformacion" method="POST" class="mb-3">
+        <!-- Campos para ingresar la información -->
+        <label for="clienteIdInput">Cliente ID:</label>
+        <input
+          type="text"
+          name="clienteId"
+          id="clienteIdInput"
+          class="form-control mb-2"
+          required
+        />
+
+        <label for="ventaIdInput">Venta ID:</label>
+        <input
+          type="text"
+          name="ventaId"
+          id="ventaIdInput"
+          class="form-control mb-2"
+          required
+        />
+
+        <label for="historialIdInput">Historial ID:</label>
+        <input
+          type="text"
+          name="historialId"
+          id="historialIdInput"
+          class="form-control mb-2"
+          required
+        />
+
+        <label for="formaPagoIdInput">Forma de Pago ID:</label>
+        <input
+          type="text"
+          name="formaPagoId"
+          id="formaPagoIdInput"
+          class="form-control mb-2"
+          required
+        />
+
+        <label for="fechaInput">Fecha:</label>
+        <input
+          type="date"
+          name="fecha"
+          id="fechaInput"
+          class="form-control mb-2"
+          required
+        />
+
+        <button type="submit" class="btn btn-primary">Generar Factura</button>
+      </form>
+
+      <a href="/inicio" class="btn btn-success mt-3">Regresar</a>
+    </div>
+    <h2>Información de Factura</h2>
+
+     <!-- Formulario para buscar cliente por número de identidad -->
+     <form action="/Factura" method="GET" class="mb-3">
+        <label for="identidadInput">Número de Venta:</label>
+        <input
+          type="text"
+          name="identidad"
+          id="identidadInput"
+          class="form-control mb-2"
+          required
+        />
+        <button type="submit" class="btn btn-primary">Buscar Cliente</button>
+      </form>
+
+
+    <!-- Tabla para mostrar la información de factura -->
+    <% if (factura && factura.length > 0) { %>
+      <table class="table table-dark table-bordered table-hover">
+        <thead>
+          <tr>
+            <td>Cliente ID</td>
+            <td>Venta ID</td>
+            <td>Historial ID</td>
+            <td>Forma de Pago ID</td>
+            <td>Fecha de Factura</td>
+            <td>Total Producto</td>
+            <td>Total Cita</td>
+            <td>Subtotal</td>
+            <td>Total a Pagar</td>
+          </tr>
+        </thead>
+        <tbody>
+          <% factura.forEach(item => { %>
+            <tr>
+              <td><%= item.clienteID %></td>
+              <td><%= item.ventaID %></td>
+              <td><%= item.historialMedicoID %></td>
+              <td><%= item.formaDePagoID %></td>
+              <td><%= item.fechaFactura %></td>
+              <td><%= item.totalProducto %></td>
+              <td><%= item.totalCita %></td>
+              <td><%= item.subTotal %></td>
+              <td><%= item.totalPagar %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No se encontró información de factura.</p>
+    <% } %>
+
+    <a href="/" class="btn btn-success mt-3">Regresar</a>
+  </div>
+</div>
+</div>
+
+<%- include("partials/_footer") %>

@@ -1,82 +1,47 @@
 import { pool } from "../db.js";
 export const crearVenta = async (req, res) => {
-    const newCustomer = req.body;
-  
-    try {
-      // Iniciar la transacción
-      await pool.query("START TRANSACTION");
-  
-      // Insertar en la tabla telefono
-      const [resultVenta] =  await pool.query("INSERT INTO venta SET fechaVenta = ?, cantidadVendida =?, empleadoID = ?, OBS=?", [newCustomer.Telefono]);
-      const ventaID = resultVenta.insertId;
+  const newCustomer = req.body;
+  let mostrarFormulario = false;
 
-      // Obtener información de la venta recién creada
-      const [venta] = await pool.query("SELECT * FROM venta WHERE ventaID = ?", [ventaID]);
+  try {
+    // Iniciar la transacción
+    await pool.query("START TRANSACTION");
 
-      res.render("venta", { venta: venta[0] });
-  
-      // Confirmar la transacción
-      await pool.query("COMMIT");
-  // Almacena el número de venta en la sesión
-     req.session.numeroVenta = VentaID;
-      res.redirect("/venta");
-    } catch (error) {
-      console.error("Error en la transacción:", error.message);
-  
-      // Deshacer la transacción en caso de error
-      await pool.query("ROLLBACK");
-  
-      res.status(500).send("Error interno del servidor");
-    }
-  };/*
-  import { pool } from "../db.js";
+    // Insertar en la tabla venta
+    const [resultVenta] = await pool.query("INSERT INTO venta SET fechaVenta = ?, cantidadVendida =?, empleadoID = ?, OBS=?", [newCustomer.fechaVenta, newCustomer.cantidad, newCustomer.empleadoID, newCustomer.obs]);
+    const ventaID = resultVenta.insertId;
 
-export const crearVenta = async (req, res) => {
-    const newVenta = req.body;  // Supongamos que recibes la información de la venta en req.body
-    const productos = req.body.productos;  // Supongamos que recibes la información de los productos en req.body.productos
+    // Obtener información de la venta recién creada
+    const [venta] = await pool.query("SELECT * FROM venta WHERE ventaID = ?", [ventaID]);
 
-    try {
-        // Iniciar la transacción
-        await pool.query("START TRANSACTION");
+    // Establecer mostrarFormulario en true para mostrar el formulario en la vista
+    mostrarFormulario = true;
 
-        // Insertar en la tabla venta y obtener el ventaID generado automáticamente
-        const [resultVenta] = await pool.query("INSERT INTO venta SET ?", [newVenta]);
-        const ventaID = resultVenta.insertId;
+    // Confirmar la transacción
+    await pool.query("COMMIT");
 
-        // Insertar en la tabla ventas_productos para cada producto
-        for (const producto of productos) {
-            await pool.query(
-                "INSERT INTO ventas_productos SET productoID = ?, ventaID = ?, cantidad=?, precioUnitario=?, subtotalProducto=?",
-                [producto.productoID, ventaID, producto.cantidad, producto.precioUnitario, producto.subtotalProducto]
-            );
-        }
+    // Almacena el número de venta en la sesión
+    req.session.numeroVenta = ventaID;
 
-        // Confirmar la transacción
-        await pool.query("COMMIT");
-
-        res.redirect("/");
-    } catch (error) {
-        console.error("Error en la transacción:", error.message);
-
-        // Deshacer la transacción en caso de error
-        await pool.query("ROLLBACK");
-
+    // Renderizar la vista y luego redirigir
+    res.render("venta", { venta: venta, mostrarFormulario: mostrarFormulario }, (err, html) => {
+      if (err) {
+        console.error("Error en la renderización:", err.message);
         res.status(500).send("Error interno del servidor");
-    }
-};*/
-  export const reporteProductosV = async (req, res) => {
-    const nombreProducto = req.query.nombreProducto || '';
-  
-    try {
-      const [productos] = await pool.query("SELECT * FROM producto WHERE nombreProducto LIKE ?", [`%${nombreProducto}%`]);
-      
-      res.render('venta', { productos, nombreProducto });
-    } catch (error) {
-      console.error('Error al buscar productos:', error.message);
-      res.status(500).send('Error interno del servidor');
-    }
-  };
+      } else {
+        res.send(html);
+        //res.redirect("/venta");
+      }
+    });
+  } catch (error) {
+    console.error("Error en la transacción:", error.message);
 
+    // Deshacer la transacción en caso de error
+    await pool.query("ROLLBACK");
+
+    res.status(500).send("Error interno del servidor");
+  }
+};
 
   export const crearVentaProducto = async (req, res) => {
     const newCustomer = req.body;
@@ -85,19 +50,29 @@ export const crearVenta = async (req, res) => {
       // Iniciar la transacción
       await pool.query("START TRANSACTION");
   
-      await pool.query(
+     /* await pool.query(
         "INSERT INTO ventas_productos SET productoID = ?, ventaID = ?, cantidad=?, precioUnitario=?, subtotalProducto = CONVERT(NVARCHAR, cantidad * precioUnitario)",
-        [newCustomer.ventaID,newCustomer.productoID,newCustomer.ventaID,newCustomer.cantidad,newCustomer.precioUnitario]
+        [newCustomer.ventaID,newCustomer.productoID,newCustomer.cantidadP,newCustomer.precioUnitario]
+      );*/
+
+     // const subtotal = (newCustomer.cantidadP * newCustomer.precioUnitario);
+     const subtotal = '' + (newCustomer.cantidadP * newCustomer.precioUnitario);
+
+      const cantidadS = (newCustomer.cantidadP).toString();
+      await pool.query(
+        "INSERT INTO ventas_productos SET productoID = ?, ventaID = ?, cantidad=?, precioUnitario=?,OBS =?,subtotalProducto = ?",
+        [newCustomer.productoID, newCustomer.ventaID, cantidadS,newCustomer.obs,newCustomer.precioUnitario,subtotal]
       );
+
       //restar al producto
       await pool.query(
-        "INSERT INTO ventas_productos SET productoID = ?, ventaID = ?, cantidad=?, precioUnitario=?, subtotalProducto = CONVERT(NVARCHAR, cantidad * precioUnitario)",
-        [newCustomer.ventaID,newCustomer.productoID,newCustomer.ventaID,newCustomer.cantidad,newCustomer.precioUnitario]
+        "UPDATE producto SET cantidad = CAST(cantidad AS SIGNED) - CAST(? AS SIGNED) WHERE productoID = ?",
+        [newCustomer.cantidadP, newCustomer.productoID]
       );
 
       await pool.query("COMMIT");
   // Almacena el número de venta en la sesión
-     req.session.numeroVenta = VentaID;
+     
       res.redirect("/venta");
     } catch (error) {
       console.error("Error en la transacción:", error.message);
@@ -112,3 +87,37 @@ export const crearVenta = async (req, res) => {
   //Insertar en Cliente
   
 
+  export const crearVentaCita = async (req, res) => {
+    const newCustomer = req.body;
+  
+    try {
+      // Iniciar la transacción
+      await pool.query("START TRANSACTION");
+  
+     /* await pool.query(
+        "INSERT INTO ventas_productos SET productoID = ?, ventaID = ?, cantidad=?, precioUnitario=?, subtotalProducto = CONVERT(NVARCHAR, cantidad * precioUnitario)",
+        [newCustomer.ventaID,newCustomer.productoID,newCustomer.cantidadP,newCustomer.precioUnitario]
+      );*/
+
+     // const subtotal = (newCustomer.cantidadP * newCustomer.precioUnitario);
+     const subtotal = '' + (newCustomer.cantidadP * newCustomer.precioUnitario);
+
+      const precioCita = (newCustomer.precioServicio).toString();
+      await pool.query(
+        "INSERT INTO ventas_citas SET ventaID = ?, citaID = ?,  precioServicio=?,OBS =?,subtotalCita = ?",
+        [newCustomer.ventaID, newCustomer.citaID,precioCita,newCustomer.obsCita,precioCita]      );
+
+
+      await pool.query("COMMIT");
+  // Almacena el número de venta en la sesión
+     
+      res.redirect("/venta");
+    } catch (error) {
+      console.error("Error en la transacción:", error.message);
+  
+      // Deshacer la transacción en caso de error
+      await pool.query("ROLLBACK");
+  
+      res.status(500).send("Error interno del servidor");
+    }
+  };

@@ -1,0 +1,55 @@
+<!-- EJS para buscar mascota y cliente -->
+<%- include("partials/_header") %>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Buscar Mascota Historial</h2>
+
+      <!-- Formulario para buscar -->
+      <form action="/reporteHistorial" method="GET" class="mb-3">
+        <label for="identidadInput">Número de Mascota:</label>
+        <input
+          type="text"
+          name="identidad"
+          id="identidadInput"
+          class="form-control mb-2"
+          required
+        />
+        <button type="submit" class="btn btn-primary">Buscar Historial</button>
+      </form>
+
+      <!-- Mostrar información del cliente si está disponible -->
+      <% if (personas && personas.length > 0) { %>
+        <h3>Información del Cliente y Mascotas</h3>
+        <table class="table table-dark table-bordered table-hover">
+          <thead>
+            <tr>
+              <td>Historial ID</td>
+              <td>Fecha Registro</td>
+              <td>Diagnóstico</td>
+              <td>Tratamiento</td>
+              <td>Mascota ID</td>
+            </tr>
+          </thead>
+          <tbody>
+            <% personas.forEach(persona => { %>
+              <tr>
+                <td><%= persona.historialMedicoID %></td>
+                <td><%= persona.fechaRegistro %></td>
+                <td><%= persona.diagnostico %></td>
+                <td><%= persona.tratamiento %></td>
+                <td><%= persona.mascotaID %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p>No se encontró la información del cliente.</p>
+      <% } %>
+      <a href="/inicio" class="btn btn-success mt-3">Regresar</a>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/_footer") %>

@@ -27,7 +27,10 @@ import {
     crearCitas,
     actualizarCitas,
     cancelarCitas,
-    generarReporteCitas
+    generarReporteCitas,
+    crearHistorial,
+    mostrarClientesyMascotashistorial,
+    mostrarHistorial
     } from "../controllers/citasControllers.js";
 
     import {
@@ -49,10 +52,17 @@ import {
     import { 
      
       crearVenta,
-      reporteProductosV,
-      crearVentaProducto
+      crearVentaProducto,
+      crearVentaCita
     
     } from "../controllers/ventaController.js";
+
+    import { 
+     
+      crearFactura,
+      mostrarFactura
+    
+    } from "../controllers/FacturaControllers.js";
 
 
 
@@ -79,6 +89,7 @@ router.post("/actualizarProducto/:id", actualizarProducto);
 router.post("/cancelarCita/:id", cancelarCitas);
 router.post("/borrarProducto/:id", eliminarProducto);
 router.post("/add_ventaproducto", crearVentaProducto);
+router.post("/add_ventacita", crearVentaCita);
 // Ruta para mostrar el formulario de creación de usuario
 router.get("/formulario", (req, res) => {
   res.render("formulario"); // Ajusta el nombre de la vista según tu estructura
@@ -86,7 +97,7 @@ router.get("/formulario", (req, res) => {
 
 // Ruta para procesar la creación de usuario desde el formulario
 router.post("/formulario", crearUsuario);
-
+mostrarClientesyMascotashistorial
 
 router.get('/login', (req, res) => {
   res.render('login'); // Renderiza el formulario de inicio de sesión
@@ -94,16 +105,21 @@ router.get('/login', (req, res) => {
 
 router.post("/login", logearse);
 
-/*router.post('/login', passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/login',
- // failureFlash: true,
-}));*/
 
+router.get('/venta', (req, res) => {
+  const mostrarFormulario = req.query.mostrarFormulario === 'true';
+  res.render('venta', { mostrarFormulario });
+});
 
-router.get("/venta", reporteProductosV);
-//router.get("/venta_add", crearVenta);
 router.post("/venta_add", crearVenta);
+
+router.get("/historial", mostrarClientesyMascotashistorial);
+router.get("/reporteHistorial", mostrarHistorial);
+router.post("/historial_add", crearHistorial);
+
+router.get('/Factura', mostrarFactura);
+router.post("/ingresarInformacion", crearFactura);
+crearFactura
 
 export default router;
 

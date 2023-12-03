@@ -99,3 +99,43 @@ export const generarReporteCitas = async (req, res) => {
     res.status(500).send('Error interno del servidor');
   }
 };
+
+export const crearHistorial = async (req, res) => {
+  const nuevoHistorial = req.body;
+
+  try {
+    // Iniciar la transacción
+    await pool.query("START TRANSACTION");
+
+    await pool.query("INSERT INTO historialMedico SET historialMedicoID = ? ,fechaRegistro = ?, diagnostico = ?, tratamiento = ?, mascotaID=?",
+     [nuevoHistorial.historialid,nuevoHistorial.fecha,nuevoHistorial.diagnostico,nuevoHistorial.tratamiento,nuevoHistorial.mascotaid]);
+
+    // Confirmar la transacción
+    await pool.query("COMMIT");
+
+    res.redirect("/historial");
+  } catch (error) {
+    console.error("Error en la transacción:", error.message);
+
+    // Deshacer la transacción en caso de error
+    await pool.query("ROLLBACK");
+
+    res.status(500).send("Error interno del servidor");
+  }
+};
+
+export const mostrarClientesyMascotashistorial = async (req, res) => {
+  const { identidad } = req.query;
+  const [result] = await pool.query("SELECT c.clienteID, p.primerNombre, p.primerApellido, p.segundoApellido, m.mascotaID,m.nombreMascota FROM cliente c JOIN  persona p ON c.personaID = p.personaID JOIN  mascota m ON c.clienteID = m.clienteID WHERE m.clienteID =  ?", [
+    identidad,
+  ]);
+  res.render("historial", { personas: result });
+};
+
+export const mostrarHistorial = async (req, res) => {
+  const { identidad } = req.query;
+  const [result] = await pool.query("SELECT * FROM historialMedico WHERE mascotaID =  ?", [
+    identidad,
+  ]);
+  res.render("reporteHistorial", { personas: result });
+};

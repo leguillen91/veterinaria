@@ -135,3 +135,58 @@
 </div>
 
 <%- include("partials/_footer") %>
+
+
+<!-- Lista de productos (ajustar según sea necesario) -->
+<% if (productos && productos.length > 0) { %>
+  <table class="table table-dark table-bordered table-hover">
+    <thead>
+      <tr>
+        <td>ID</td>
+        <td>Nombre</td>
+        <td>Precio de Compra</td>
+        <td>Precio de Venta</td>
+        <td>Cantidad</td>
+        <td>Acciones</td>
+      </tr>
+    </thead>
+    <tbody>
+      <% productos.forEach(producto => { %>
+        <tr>
+          <td><%= producto.productoID %></td>
+          <td><%= producto.nombreProducto %></td>
+          <td><%= producto.precioCompra %></td>
+          <td><%= producto.precioProducto %></td>
+          <td><%= producto.cantidad %></td>
+          <td>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } else { %>
+  <p>No existen productos registrados.</p>
+<% } %>
+
+
+<h2>Información de la Venta</h2>
+<table class="table table-dark table-bordered table-hover">
+    <thead>
+        <tr>
+            <td>ID de Venta</td>
+            <td>Fecha de Venta</td>
+            <td>Cantidad Vendida</td>
+            <td>ID de Empleado</td>
+            <td>OBS</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><%= venta.ventaID %></td>
+            <td><%= venta.fechaVenta %></td>
+            <td><%= venta.cantidadVendida %></td>
+            <td><%= venta.empleadoID %></td>
+            <td><%= venta.OBS %></td>
+        </tr>
+    </tbody>
+</table>
