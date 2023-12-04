@@ -43,9 +43,11 @@
         <p>No existen citas para el mes <%= mes %>.</p>
       <% } %>
 
-    </div>
-    <a href="/cita" class="btn btn-primary">Regresar a Nueva Cita</a>
-  </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <a href="/cita" class="btn btn-success mt-3">Regresar a Nueva Cita</a>
+        </div>
+      </div>
 </div>
 
 <%- include("partials/_footer") %>
